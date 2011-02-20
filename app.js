@@ -9,9 +9,10 @@
 var config = {
   host: process.env.HOST || 'localhost'
 , port: process.env.PORT || 8080
+, dirname: __dirname + '/files'
 }
 
-var raw = require('./raw')('files')
+var raw = require('./raw')(config.dirname)
   , express = require('express')
   , app = express.createServer()
 
