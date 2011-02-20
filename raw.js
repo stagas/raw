@@ -70,16 +70,11 @@ var Raw = exports.Raw = function(dirname) {
     }
   })
 
-  this.__hashAlgo = 'sha1'
-  this.__hashEnc = 'hex'
-
   this.maxOpenFiles = 30
   this.__openFiles = 0
 
   this.__queue__ = new Queue()
   this.__queued = false
- 
-  this.__busy__ = {}
 
   this.on('queue', function() {
     if (!self.__queued) {
@@ -93,25 +88,11 @@ util.inherits(Raw, EventEmitter)
 Raw.Raw = Raw
 module.exports = Raw
 
-Raw.prototype.__busy = function(key) {
-  this.__openFiles++
-  this.__busy__[key] = true
-}
-
-Raw.prototype.__free = function(key) {
-  this.__openFiles--
-  delete this.__busy__[key]
-}
-
 Raw.prototype.__createDir = function(dir) {
   var self = this
 
   fs.mkdirSync(dir, 0755)
   self.ready = true
-}
-
-Raw.prototype.__hash = function(key) {
-  return crypto.createHash(this.__hashAlgo).update(key).digest(this.__hashEnc)
 }
 
 Raw.prototype.__queue = function(a, b) {
@@ -142,7 +123,7 @@ Raw.prototype.__flush = function() {
 Raw.prototype.__unique = function(cb) {
   var self = this
     , buf = []
-    , chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789'
+    , chars = 'ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnpqrstuvwxyz2346789'
     , charlen = chars.length
 
   ;(function next() {
